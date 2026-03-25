@@ -1,0 +1,246 @@
+{
+  "author": "",
+  "category": "",
+  "dimension": "",
+  "extensionNamespace": "",
+  "fullName": "",
+  "gdevelopVersion": "",
+  "helpPath": "",
+  "iconUrl": "",
+  "name": "CodingConnector",
+  "previewIconUrl": "",
+  "shortDescription": "",
+  "version": "",
+  "description": "",
+  "tags": [],
+  "authorIds": [],
+  "dependencies": [],
+  "globalVariables": [
+    {
+      "name": "code",
+      "type": "string",
+      "value": "// Code Here!"
+    }
+  ],
+  "sceneVariables": [],
+  "eventsFunctions": [
+    {
+      "fullName": "",
+      "functionType": "Action",
+      "name": "SetGlobalCodeVariableFromEditor",
+      "sentence": "",
+      "events": [
+        {
+          "type": "BuiltinCommonInstructions::JsCode",
+          "inlineCode": [
+            "try {",
+            "    const codeVar = runtimeScene.getGame().getVariables().get(\"code\");",
+            "    const editor = runtimeScene.getGame().editorInstance;",
+            "",
+            "    if (editor) {",
+            "        const code = editor.getValue();",
+            "        codeVar.setString(code);",
+            "    }",
+            "}",
+            "catch (ex) {",
+            "    console.log(\"Error saving code:\", ex);",
+            "}",
+            ""
+          ],
+          "parameterObjects": "",
+          "useStrict": true,
+          "eventsSheetExpanded": false
+        }
+      ],
+      "parameters": [],
+      "objectGroups": []
+    },
+    {
+      "fullName": "",
+      "functionType": "Action",
+      "name": "SetEditorFromGlobalCodeVariable",
+      "sentence": "",
+      "events": [
+        {
+          "type": "BuiltinCommonInstructions::JsCode",
+          "inlineCode": [
+            "let editor = null;",
+            "",
+            "try {",
+            "    const codeVar = runtimeScene.getGame().getVariables().get(\"code\");",
+            "",
+            "    editor = runtimeScene.getGame().editorInstance;",
+            "",
+            "    editor.setValue(codeVar.getAsString());",
+            "}",
+            "catch (ex) {",
+            "    console.log(\"Error loading code:\", ex);",
+            "",
+            "    if (editor) {",
+            "        try {",
+            "            editor.setValue(\"\");",
+            "        } catch (ex2) {",
+            "            console.log(\"Error clearing editor:\", ex2);",
+            "        }",
+            "    }",
+            "}",
+            ""
+          ],
+          "parameterObjects": "",
+          "useStrict": true,
+          "eventsSheetExpanded": false
+        }
+      ],
+      "parameters": [],
+      "objectGroups": []
+    },
+    {
+      "fullName": "",
+      "functionType": "Action",
+      "name": "ExecuteGlobalCodeVariable",
+      "sentence": "",
+      "events": [
+        {
+          "type": "BuiltinCommonInstructions::JsCode",
+          "inlineCode": [
+            "try {",
+            "    // Get the game instance",
+            "    const game = runtimeScene.getGame();",
+            "",
+            "    // Safely read the global variable \"code\"",
+            "    let code = \"\";",
+            "    try {",
+            "        code = game.getVariables().get(\"code\").getAsString();",
+            "    } catch (err) {",
+            "        console.error(\"Failed to read global variable 'code':\", err);",
+            "        return;",
+            "    }",
+            "",
+            "    // Define the initialization function for the interpreter",
+            "    const initFunc = function(interpreter, globalObject) {",
+            "        try {",
+            "            // Expose \"url\" to the interpreter",
+            "            interpreter.setProperty(",
+            "                globalObject,",
+            "                \"url\",",
+            "                String(location)",
+            "            );",
+            "",
+            "            // Expose \"alert\" to the interpreter",
+            "            const wrapper = function alert(text) {",
+            "                return window.alert(text);",
+            "            };",
+            "",
+            "            interpreter.setProperty(",
+            "                globalObject,",
+            "                \"alert\",",
+            "                interpreter.createNativeFunction(wrapper)",
+            "            );",
+            "        } catch (err) {",
+            "            console.error(\"Error inside initFunc:\", err);",
+            "        }",
+            "    };",
+            "",
+            "    // Create the interpreter safely",
+            "    let myInterpreter = null;",
+            "    try {",
+            "        myInterpreter = new game.Interpreter(code, initFunc);",
+            "    } catch (err) {",
+            "        console.error(\"Interpreter creation failed:\", err);",
+            "        return;",
+            "    }",
+            "",
+            "    // Run the interpreter safely",
+            "    try {",
+            "        myInterpreter.run();",
+            "    } catch (err) {",
+            "        console.error(\"Error while running interpreter:\", err);",
+            "    }",
+            "",
+            "} catch (err) {",
+            "    console.error(\"Unexpected error in interpreter wrapper:\", err);",
+            "}",
+            ""
+          ],
+          "parameterObjects": "",
+          "useStrict": true,
+          "eventsSheetExpanded": true
+        }
+      ],
+      "parameters": [],
+      "objectGroups": []
+    },
+    {
+      "fullName": "",
+      "functionType": "Action",
+      "name": "HideUI",
+      "sentence": "",
+      "events": [
+        {
+          "type": "BuiltinCommonInstructions::JsCode",
+          "inlineCode": [
+            "if(runtimeScene.getGame().UI)",
+            "{",
+            "    runtimeScene.getGame().UI.style.display = \"none\";",
+            "}",
+            ""
+          ],
+          "parameterObjects": "",
+          "useStrict": true,
+          "eventsSheetExpanded": false
+        }
+      ],
+      "parameters": [],
+      "objectGroups": []
+    },
+    {
+      "fullName": "",
+      "functionType": "Action",
+      "name": "ShowUI",
+      "sentence": "",
+      "events": [
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "type": "BuiltinCommonInstructions::JsCode",
+          "inlineCode": [
+            "if(runtimeScene.getGame().UI)",
+            "{",
+            "    runtimeScene.getGame().UI.style.display = \"block\";",
+            "}"
+          ],
+          "parameterObjects": "",
+          "useStrict": true,
+          "eventsSheetExpanded": false
+        }
+      ],
+      "parameters": [],
+      "objectGroups": []
+    }
+  ],
+  "eventsFunctionsFolderStructure": {
+    "folderName": "__ROOT",
+    "children": [
+      {
+        "functionName": "SetGlobalCodeVariableFromEditor"
+      },
+      {
+        "functionName": "SetEditorFromGlobalCodeVariable"
+      },
+      {
+        "functionName": "ExecuteGlobalCodeVariable"
+      },
+      {
+        "functionName": "HideUI"
+      },
+      {
+        "functionName": "ShowUI"
+      }
+    ]
+  },
+  "eventsBasedBehaviors": [],
+  "eventsBasedObjects": []
+}
